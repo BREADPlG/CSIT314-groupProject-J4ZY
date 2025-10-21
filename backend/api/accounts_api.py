@@ -1,23 +1,37 @@
 from flask import Blueprint, request, jsonify
+from accounts_controller import AccountController
+from accounts_service import AccountService
 
+# Blueprint for accounts endpoints
 accounts_bp = Blueprint("accounts", __name__, url_prefix="/accounts")
 
+# Initialize service and controller
+service = AccountService()
+controller = AccountController(service)
+
+# Create account
 @accounts_bp.post("/")
 def create_account():
-    pass
+    data = request.get_json()
+    return controller.create(data)
 
-@accounts_bp.get("/<account_id>")
+# Get single account by ID
+@accounts_bp.get("/<int:account_id>")
 def get_account(account_id):
-    pass
+    return controller.retrieve(account_id)
 
+# List all accounts
 @accounts_bp.get("/")
 def list_accounts():
-    pass
+    return controller.list()
 
-@accounts_bp.put("/<account_id>")
+# Update account
+@accounts_bp.put("/<int:account_id>")
 def update_account(account_id):
-    pass
+    data = request.get_json()
+    return controller.update(account_id, data)
 
-@accounts_bp.delete("/<account_id>")
+# Delete account
+@accounts_bp.delete("/<int:account_id>")
 def delete_account(account_id):
-    pass
+    return controller.delete(account_id)
